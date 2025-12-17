@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Github, Linkedin, Twitter, Mail, Download, Code, Palette, Database, Smartphone, Server, Globe, ExternalLink } from "lucide-react";
+import { Menu, X, Github, Linkedin, Twitter, Mail, Download, Code, Palette, Database, Smartphone, Server, Globe, ExternalLink, Sun, Moon, Briefcase, BookOpen } from "lucide-react";
 import "./styles.css";
 
+// Theme Context
+const ThemeContext = React.createContext();
+
 // Components
-const Navbar = ({ scrollToSection, isMobileMenuOpen, toggleMobileMenu }) => (
+const Navbar = ({ scrollToSection, isMobileMenuOpen, toggleMobileMenu, theme, toggleTheme }) => (
   <motion.nav
     initial={{ y: -100 }}
     animate={{ y: 0 }}
@@ -23,7 +26,7 @@ const Navbar = ({ scrollToSection, isMobileMenuOpen, toggleMobileMenu }) => (
       </motion.div>
       
       <div className="hidden md:flex space-x-8">
-        {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
+        {['home', 'about', 'skills', 'projects', 'contact', 'internships'].map((section) => (
           <motion.a
             key={section}
             whileHover={{ y: -2 }}
@@ -35,13 +38,24 @@ const Navbar = ({ scrollToSection, isMobileMenuOpen, toggleMobileMenu }) => (
         ))}
       </div>
       
-      <motion.button
-        whileTap={{ scale: 0.95 }}
-        className="md:hidden"
-        onClick={toggleMobileMenu}
-      >
-        {isMobileMenuOpen ? <X /> : <Menu />}
-      </motion.button>
+      <div className="flex items-center space-x-4">
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={toggleTheme}
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20"
+          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {theme === 'dark' ? <Sun className="text-yellow-400" /> : <Moon className="text-blue-400" />}
+        </motion.button>
+        
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          className="md:hidden"
+          onClick={toggleMobileMenu}
+        >
+          {isMobileMenuOpen ? <X /> : <Menu />}
+        </motion.button>
+      </div>
     </div>
     
     <AnimatePresence>
@@ -52,7 +66,7 @@ const Navbar = ({ scrollToSection, isMobileMenuOpen, toggleMobileMenu }) => (
           exit={{ opacity: 0, height: 0 }}
           className="md:hidden mt-4 space-y-4"
         >
-          {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
+          {['home', 'about', 'skills', 'projects', 'contact', 'internships'].map((section) => (
             <motion.a
               key={section}
               initial={{ x: -20 }}
@@ -397,6 +411,140 @@ const ProjectsSection = () => {
   );
 };
 
+const InternshipsSection = () => {
+  const internships = [
+    {
+      id: 1,
+      company: "Tech Innovators Inc.",
+      position: "Frontend Developer Intern",
+      period: "Summer 2022",
+      description: "Developed responsive web applications using React and TypeScript. Collaborated with the design team to implement UI/UX improvements.",
+      skills: ["React", "TypeScript", "Tailwind CSS", "Git"]
+    },
+    {
+      id: 2,
+      company: "Digital Solutions Co.",
+      position: "Full Stack Developer Intern",
+      period: "Fall 2021",
+      description: "Built RESTful APIs with Node.js and Express. Integrated third-party services and optimized database queries.",
+      skills: ["Node.js", "Express", "MongoDB", "Postman"]
+    }
+  ];
+
+  const linkedinPosts = [
+    {
+      id: 1,
+      title: "My Journey into Web Development",
+      content: "Excited to share my journey of becoming a web developer. From my first 'Hello World' to building full-stack applications, it's been an incredible learning experience.",
+      date: "June 15, 2023",
+      link: "https://linkedin.com/post/1"
+    },
+    {
+      id: 2,
+      title: "Why I Love React Hooks",
+      content: "React Hooks have completely changed the way I write components. The simplicity and reusability they offer is unmatched. Here's why I think every React developer should master them.",
+      date: "May 20, 2023",
+      link: "https://linkedin.com/post/2"
+    }
+  ];
+
+  return (
+    <section id="internships" className="section">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl font-bold mb-4 font-gradient">Internships & Posts</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            My professional experiences and thoughts
+          </p>
+        </motion.div>
+        
+        <div className="grid md:grid-cols-2 gap-12 mb-16">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="glass p-8"
+          >
+            <h3 className="text-2xl font-bold mb-8 font-gradient flex items-center">
+              <Briefcase className="mr-2" />
+              Internship Experiences
+            </h3>
+            <div className="space-y-8">
+              {internships.map((internship, index) => (
+                <motion.div
+                  key={internship.id}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="border-l-4 border-purple-500 pl-6"
+                >
+                  <h4 className="text-xl font-semibold mb-1">{internship.position}</h4>
+                  <p className="text-purple-400 mb-2">{internship.company} • {internship.period}</p>
+                  <p className="text-gray-300 mb-3">{internship.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {internship.skills.map((skill, skillIndex) => (
+                      <span
+                        key={skillIndex}
+                        className="px-3 py-1 bg-white/10 rounded-full text-xs text-gray-300"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="glass p-8"
+          >
+            <h3 className="text-2xl font-bold mb-8 font-gradient flex items-center">
+              <BookOpen className="mr-2" />
+              LinkedIn Posts
+            </h3>
+            <div className="space-y-6">
+              {linkedinPosts.map((post, index) => (
+                <motion.div
+                  key={post.id}
+                  whileHover={{ scale: 1.02 }}
+                  className="p-4 rounded-lg hover:bg-white/5 transition-colors"
+                >
+                  <h4 className="font-semibold mb-2">{post.title}</h4>
+                  <p className="text-gray-300 mb-3">{post.content}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-400">{post.date}</span>
+                    <a
+                      href={post.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-purple-400 hover:text-purple-300"
+                    >
+                      Read on LinkedIn
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -561,10 +709,22 @@ const Footer = () => (
 
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+  };
 
   const scrollToSection = (sectionId) => {
-    setActiveSection(sectionId);
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
@@ -575,98 +735,24 @@ export default function App() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['home', 'about', 'skills', 'projects', 'contact'];
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <div className="App">
-      <Navbar
-        scrollToSection={scrollToSection}
-        isMobileMenuOpen={isMobileMenuOpen}
-        toggleMobileMenu={toggleMobileMenu}
-      />
-
-      <AnimatePresence mode="wait">
-        {activeSection === 'home' && (
-          <motion.div
-            key="home"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <HeroSection />
-          </motion.div>
-        )}
-
-        {activeSection === 'about' && (
-          <motion.div
-            key="about"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <AboutSection />
-          </motion.div>
-        )}
-
-        {activeSection === 'skills' && (
-          <motion.div
-            key="skills"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <SkillsSection />
-          </motion.div>
-        )}
-
-        {activeSection === 'projects' && (
-          <motion.div
-            key="projects"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <ProjectsSection />
-          </motion.div>
-        )}
-
-        {activeSection === 'contact' && (
-          <motion.div
-            key="contact"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <ContactSection />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <Footer />
-    </div>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <div className={theme === 'dark' ? 'dark' : 'light'}>
+        <Navbar
+          scrollToSection={scrollToSection}
+          isMobileMenuOpen={isMobileMenuOpen}
+          toggleMobileMenu={toggleMobileMenu}
+          theme={theme}
+          toggleTheme={toggleTheme}
+        />
+        <HeroSection />
+        <AboutSection />
+        <SkillsSection />
+        <ProjectsSection />
+        <InternshipsSection />
+        <ContactSection />
+        <Footer />
+      </div>
+    </ThemeContext.Provider>
   );
 }
